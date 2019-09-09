@@ -1,0 +1,11 @@
+vs split(string s) {
+  vs v;
+  istringstream iss(s);
+  do {
+    string sub;
+    iss >> sub;
+    v.pb(sub);
+  } while (iss);
+  v.pop_back();
+  return v;
+}

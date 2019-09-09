@@ -1,0 +1,6 @@
+vi psp(int n) {
+  vector < bool > p = ps(n);
+  vi a;
+  forn(i, n + 1) if (p[i]) a.pb(i);
+  return a;
+}

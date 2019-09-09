@@ -1,0 +1,25 @@
+struct fenwick {
+  vi bit;
+  int size;
+  fenwick(int n) {
+    size = n;
+    bit.resize(n + 1, 0);
+  }
+  int sum(int a) {
+    int s = 0;
+    while (a >= 1) {
+      s += bit[a];
+      a -= a & -a;
+    }
+    return s;
+  }
+  int sum(int a, int b) {
+    return sum(b) - (a == 1 ? 0 : sum(a - 1));
+  }
+  void update(int k, int x) {
+    while (k <= size) {
+      bit[k] += x;
+      k += k & -k;
+    }
+  }
+};

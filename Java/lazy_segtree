@@ -1,0 +1,105 @@
+static class LazyST {
+        static int nullVal = Integer.MIN_VALUE;
+ 
+        int[] tree;
+        int[] updates;
+        int n;
+ 
+        LazyST(int n, int[] initArr) {
+            n = (int) Math.pow(2, Math.ceil(Math.log(n) / Math.log(2)));
+ 
+            tree = new int[2 * n - 1];
+            updates = new int[tree.length];
+ 
+            System.arraycopy(initArr, 0, tree, n - 1, initArr.length);
+            for (int i = tree.length - 1; i >= 0; i--) recalc(i);
+ 
+            this.n = n;
+        }
+ 
+        LazyST(int n) {
+            this(n, new int[]{});
+        }
+ 
+        int combine(int a, int b) {
+            return Math.max(a, b);
+        }
+ 
+        void apply(int idx, int u) {
+            updates[idx] += u;
+            tree[idx] += u;
+        }
+ 
+        void set(int idx, int k) {
+            int curr = idx + n - 1;
+            tree[curr] = k;
+ 
+            while (curr > 0) {
+                curr = p(curr);
+                recalc(curr);
+            }
+        }
+ 
+        void update(int left, int right, int diff) {
+            update(0, 0, n - 1, diff, left, right);
+        }
+ 
+        void processLazy(int idx) {
+            if (l(idx) < tree.length) apply(l(idx), updates[idx]);
+            if (r(idx) < tree.length) apply(r(idx), updates[idx]);
+ 
+            updates[idx] = 0;
+        }
+ 
+        public void update(int idx, int il, int ir, int delta, int ul, int ur) {
+            if (ul <= il && ir <= ur) {
+                apply(idx, delta);
+                return;
+            }
+            if (il > ur || ir < ul) return;
+ 
+            processLazy(idx);
+ 
+            int mid = (il + ir) / 2;
+            update(l(idx), il, mid, delta, ul, ur);
+            update(r(idx), mid + 1, ir, delta, ul, ur);
+ 
+            recalc(idx);
+        }
+ 
+        int query(int left, int right) {
+            return query(0, left, right, 0, n - 1);
+        }
+ 
+        int query(int idx, int ql, int qr, int il, int ir) {
+            if (ql <= il && ir <= qr) return tree[idx];
+            if (ql > ir || qr < il) return nullVal;
+            processLazy(idx);
+ 
+            int mid = (il + ir) / 2;
+            return combine(query(l(idx), ql, qr, il, mid), query(r(idx), ql, qr, mid + 1, ir));
+        }
+ 
+ 
+        public void recalc(int idx) {
+            if (l(idx) < tree.length) {
+                tree[idx] = tree[l(idx)];
+                if (r(idx) < tree.length) {
+                    tree[idx] = combine(tree[idx], tree[r(idx)]);
+                }
+            }
+        }
+ 
+        int p(int n) {
+            return (n - 1) / 2;
+        }
+ 
+        int l(int n) {
+            return 2 * n + 1;
+        }
+ 
+        int r(int n) {
+            return l(n) + 1;
+        }
+ 
+    }

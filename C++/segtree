@@ -1,0 +1,140 @@
+#define RANGE_SUM 0
+#define RANGE_MIN 1
+#define RANGE_MAX 2
+#define RANGE_XOR 3
+#define RANGE_MUL 4
+#define RANGE_OR  5
+#define RANGE_AND 6
+struct segtree {
+  int code;
+  int size;
+  vi segment_tree;
+  segtree(int n, int type) {
+    n = (int)(2 * pow(2, floor(log2(n)) + 3));
+    size = n;
+    code = type;
+    segment_tree.resize(n, 0);
+  }
+  void update(int index, int value) {
+    update(1, 0, size - 1, index, value);
+  }
+  void update(int index, int left, int right, int i, int value) {
+    if (left == right) segment_tree[index] = value;
+    else {
+      int mid = (left + right) / 2;
+      if (i <= mid) {
+        update(2 * index, left, mid, i, value);
+      } else {
+        update(2 * index + 1, mid + 1, right, i, value);
+      }
+      switch (code) {
+      case RANGE_SUM:
+        segment_tree[index] = segment_tree[2 * index] + segment_tree[2 * index + 1];
+        break;
+      case RANGE_MIN:
+        segment_tree[index] = min(segment_tree[2 * index], segment_tree[2 * index + 1]);
+        break;
+      case RANGE_MAX:
+        segment_tree[index] = max(segment_tree[2 * index], segment_tree[2 * index + 1]);
+        break;
+      case RANGE_XOR:
+        segment_tree[index] = segment_tree[2 * index] ^ segment_tree[2 * index + 1];
+        break;
+      case RANGE_MUL:
+        segment_tree[index] = segment_tree[2 * index] * segment_tree[2 * index + 1];
+        break;
+      case RANGE_OR:
+        segment_tree[index] = segment_tree[2 * index] | segment_tree[2 * index + 1];
+        break;
+      case RANGE_AND:
+        segment_tree[index] = segment_tree[2 * index] & segment_tree[2 * index + 1];
+        break;
+      }
+    }
+  }
+  int query(int left, int right) {
+    return query(1, 0, size - 1, left, right);
+  }
+  int query(int index, int left, int right, int lhs, int rhs) {
+    if (left >= lhs && right <= rhs) {
+      return segment_tree[index];
+    } else {
+      int ret = 0;
+      switch (code) {
+      case RANGE_SUM:
+        ret = 0;
+        break;
+      case RANGE_MIN:
+        ret = imax;
+        break;
+      case RANGE_MAX:
+        ret = imin;
+        break;
+      case RANGE_XOR:
+        ret = 0;
+        break;
+      case RANGE_MUL:
+        ret = 1;
+        break;
+      case RANGE_OR:
+        ret = 0;
+        break;
+      case RANGE_AND:
+        ret = 9223372036854775807;
+        break;
+      }
+      int mid = (left + right) / 2;
+      if (mid >= lhs) {
+        switch (code) {
+        case RANGE_SUM:
+          ret += query(2 * index, left, mid, lhs, rhs);
+          break;
+        case RANGE_MIN:
+          ret = min(ret, query(2 * index, left, mid, lhs, rhs));
+          break;
+        case RANGE_MAX:
+          ret = max(ret, query(2 * index, left, mid, lhs, rhs));
+          break;
+        case RANGE_XOR:
+          ret ^= query(2 * index, left, mid, lhs, rhs);
+          break;
+        case RANGE_MUL:
+          ret *= query(2 * index, left, mid, lhs, rhs);
+          break;
+        case RANGE_OR:
+          ret |= query(2 * index, left, mid, lhs, rhs);
+          break;
+        case RANGE_AND:
+          ret &= query(2 * index, left, mid, lhs, rhs);
+          break;
+        }
+      }
+      if (mid + 1 <= rhs) {
+        switch (code) {
+        case RANGE_SUM:
+          ret += query(2 * index + 1, mid + 1, right, lhs, rhs);
+          break;
+        case RANGE_MIN:
+          ret = min(ret, query(2 * index + 1, mid + 1, right, lhs, rhs));
+          break;
+        case RANGE_MAX:
+          ret = max(ret, query(2 * index + 1, mid + 1, right, lhs, rhs));
+          break;
+        case RANGE_XOR:
+          ret ^= query(2 * index + 1, mid + 1, right, lhs, rhs);
+          break;
+        case RANGE_MUL:
+          ret *= query(2 * index + 1, mid + 1, right, lhs, rhs);
+          break;
+        case RANGE_OR:
+          ret |= query(2 * index + 1, mid + 1, right, lhs, rhs);
+          break;
+        case RANGE_AND:
+          ret &= query(2 * index + 1, mid + 1, right, lhs, rhs);
+          break;
+        }
+      }
+      return ret;
+    }
+  }
+};

@@ -1,0 +1,8 @@
+int gray_code (int n) {
+    return n ^ (n >> 1);
+}
+int reverse_gray_code(int n) {
+    int g = 0;
+    for (; n; n >>= 1) g ^= n;
+    return g;
+}

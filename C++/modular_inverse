@@ -1,0 +1,11 @@
+int mod_inv(int n) {
+  int x, y;
+  int g = ext_gcd(a, m, x, y);
+  if (g != 1) {
+      return -1;
+  }
+  else {
+      x = (x % m + m) % m;
+      return x;
+  }
+}

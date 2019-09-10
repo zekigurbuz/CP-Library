@@ -1,0 +1,28 @@
+struct sparse_table {
+  int N, K;
+  vvi table;
+  vi logs;
+  int f(int a, int b) {
+    return min(a, b);
+  }
+  sparse_table(int a, vi arr) {
+	N = a;
+    K = floor(log(N) / log(2)) + 1;
+    table.resize(N);
+    logs.resize(N, 0);
+    rep(i, 2, N) {
+		logs[i] = logs[i/2] + 1;
+	}
+    forn(i, N) table[i].resize(K, 0);
+	forn(i, N) table[i][0] = arr[i];
+    for (int j = 1; j <= K; j++) {
+		for (int i = 0; i + (1 << j) <= N; i++) {
+			table[i][j] = f(table[i][j-1], table[i + (1 << (j - 1))][j - 1]);
+		}
+	}      
+  }
+  int query(int L, int R) {
+	int j = logs[R - L + 1];
+	return min(table[L][j], table[R - (1 << j) + 1][j]);
+  }
+};

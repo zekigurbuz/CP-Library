@@ -1,0 +1,54 @@
+public static class BITRU {
+		public long[] bit1, bit2;
+		public int length;
+		long query(int index, int code) throws Exception {
+			if (code == 1) {
+				long sum = 0;
+				while (index > 0) {
+					sum += bit1[index];
+					index -= index & -index;
+				}
+				return sum;
+			}
+			else if (code == 2) {
+				long sum = 0;
+				while (index > 0) {
+					sum += bit2[index];
+					index -= index & -index;
+				}
+				return sum;
+			}
+			else {
+				throw new Exception();
+			}
+		}
+		void update(int index, long value, int code) throws Exception {
+			if (code == 1) {
+				while (index < length) {
+					bit1[index] += value;
+					index += index & -index;
+				}
+			}
+			else if (code == 2) {
+				while (index < length) {
+					bit2[index] += value;
+					index += index & -index;
+				}
+			}
+			else {
+				throw new Exception();
+			}
+		}
+		void updateRange(long value, int left, int right) throws Exception {
+			update(left, value, 1);
+			update(right + 1, -value, 1);
+			update(left, value * (left - 1), 2);
+			update(right + 1, -value * right, 2);
+		}
+		long sum(int index) throws Exception {
+			return query(index, 1) * index - query(index, 2);
+		}
+		long sum(int left, int right) throws Exception {
+			return sum(right) - sum(left - 1);
+		}
+	}

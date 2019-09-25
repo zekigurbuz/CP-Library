@@ -1,6 +1,12 @@
 public static class BITRU {
 		public long[] bit1, bit2;
 		public int length;
+		public BITRU(int length) {
+			length++;
+			this.length = length;
+			bit1 = new long[length];
+			bit2 = new long[length];
+		}
 		long query(int index, int code) throws Exception {
 			if (code == 1) {
 				long sum = 0;

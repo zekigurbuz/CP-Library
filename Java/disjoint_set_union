@@ -1,0 +1,34 @@
+public static class DSU {
+		int[] pset;
+		int[] size;
+		int numsets;
+		public DSU(int size) {
+			this.numsets = size;
+			this.pset = new int[size];
+			this.size = new int[size];
+			for (int i = 0; i < size; i++) this.pset[i] = i;
+			for (int i = 0; i < size; i++) this.size[i] = 1;
+		}
+		public int find_set(int i) {
+			return pset[i] == i ? i : (pset[i] = find_set(pset[i]));
+		}
+		public void unify(int i, int j) {
+			int a = find_set(i), b = find_set(j);
+			if (a == b) return;
+			numsets--;
+			if (size[a] < size[b]) {
+				pset[a] = b;
+				size[b] += size[a];
+			}
+			else {
+				pset[b] = a;
+				size[a] += size[b];
+			}
+		}
+		public boolean same_set(int i, int j) {
+			return find_set(i) == find_set(j);
+		}
+		int size_set(int i) {
+			return size[find_set(i)];
+		}
+	}

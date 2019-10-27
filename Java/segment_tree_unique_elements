@@ -1,0 +1,33 @@
+public static class SEGUNI {
+		ArrayList<HashSet<Integer>> segment;
+		public SEGUNI(int length) {
+			int h = (int) Math.ceil(Math.log(length) / Math.log(2));
+			h = 2 * (int) Math.pow(2, h);
+			segment = new ArrayList<>();
+			for (int i = 0; i < h; i++) segment.add(new HashSet<>());
+		}
+		public void build(int cur, int start, int end, int[] arr) {
+			if (start == end) {
+				segment.get(cur).add(arr[start]);
+				return;
+			}
+			build(2 * cur, start, (start + end) / 2, arr);
+			build(1 + 2 * cur, 1 + (start + end) / 2, end, arr);
+			segment.get(cur).addAll(segment.get(2 * cur));
+			segment.get(cur).addAll(segment.get(2 * cur + 1));
+		}
+		public HashSet<Integer> query(int node, int l, int r, int a, int b) {
+			HashSet<Integer> result = new HashSet<>();
+			if (b < l || a > r) return result;
+			if (a <= l && r <= b) {
+				return segment.get(node);
+			}
+			result.addAll(query(2 * node, l, (l + r) / 2, a, b));
+			result.addAll(query(1 + 2 * node, 1 + (l + r) / 2, r, a, b));
+			return result;
+		}
+		public int distinct(int left, int right, int n) {
+			HashSet<Integer> ans = query(1, 0, n - 1, left, right);
+			return ans.size();
+		}
+	}

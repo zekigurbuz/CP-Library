@@ -1,0 +1,15 @@
+public static class Pair<A, B> implements Comparable<Pair<A, B>> {
+		A fi;
+		B se;
+		public Pair(A fi, B se) {
+			this.fi = fi;
+			this.se = se;
+		}
+		public int compareTo(Pair<A, B> o) {
+			int c = ((Comparable<A>)fi).compareTo((A) o.fi);
+			if (c == 0) {
+				return ((Comparable<B>)se).compareTo((B) o.se);
+			}
+			return c;
+		}
+	}

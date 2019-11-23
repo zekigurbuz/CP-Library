@@ -1,0 +1,25 @@
+public static class BIT {
+		public long[] bit;
+		int size;
+		public BIT(int n) {
+			++n;
+			bit = new long[n];
+		}
+		public long query(int a) {
+			long s = 0;
+			while (a > 0) {
+				s += bit[a];
+				a-=a&-a;
+			}
+			return s;
+		}
+		public long query(int a, int b) {
+			return query(b) - (a == 1 ? 0L : query(a - 1));
+		}
+		public void update(int a, long x) {
+			while (a < size) {
+				bit[a] += x;
+				a+=a&-a;
+			}
+		}
+	}

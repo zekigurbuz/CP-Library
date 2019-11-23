@@ -1,0 +1,24 @@
+public static boolean[] primeSieve(int size) {
+		++size;
+		boolean[] sieve = new boolean[size];
+		Arrays.fill(sieve, true);
+		sieve[0] = sieve[1] = false;
+		for (int i = 2; i * i < size; i++) {
+			if (sieve[i]) {
+				for (int j = i * i; j < size; j += i) {
+					sieve[j] = false;
+				}
+			}
+		}
+		return sieve;
+	}
+	
+	public static ArrayList<Integer> primes(int size) {
+		++size;
+		boolean[] sieve = primeSieve(size - 1);
+		ArrayList<Integer> plist = new ArrayList<>();
+		for (int i = 1; i < size; i++) {
+			if (sieve[i]) plist.add(i);
+		}
+		return plist;
+	}

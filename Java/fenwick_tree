@@ -3,6 +3,7 @@ public static class BIT {
 		int size;
 		public BIT(int n) {
 			++n;
+			size = n;
 			bit = new long[n];
 		}
 		public long query(int a) {

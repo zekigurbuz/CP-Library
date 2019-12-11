@@ -1,0 +1,38 @@
+static int[] pred;
+static ArrayList[] succ;
+static int[] result;
+static ArrayList[] edges;
+
+public static boolean works(int n, int k) {
+	for (int i = 0; i < n; i++) {
+		pred[i] = 0;
+		succ[i].clear();
+		result[i] = 0;
+	}
+	for (int i = 0; i < k; i++) {
+		for (Object p : edges[i]) {
+			succ[(int) ((Pair) p).fi].add((int) ((Pair) p).se);
+			pred[(int) ((Pair) p).se]++;
+		}
+	}
+ 
+	PriorityQueue<Integer> pq = new PriorityQueue<>();
+	for (int i = 0; i < n; i++) {
+		if (pred[i] == 0) {
+			pq.add(i);
+		}
+	}
+	
+	for (int i = 0; i < n; i++) {
+		if (pq.isEmpty()) return false;
+		int v = pq.poll();
+		result[i] = v;
+		for (Object next : succ[v]) {
+			pred[(int) next]--;
+			if (pred[(int) next] == 0) {
+				pq.add((int) next);
+			}
+		}
+	}
+	return true;
+}

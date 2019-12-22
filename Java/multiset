@@ -1,0 +1,72 @@
+public static class Multiset<E> implements Set<E> {
+		private TreeMap<E, Integer> tm;
+		private int size;
+		public Multiset() {
+			tm = new TreeMap<E, Integer>();
+		}
+		public boolean add(E a) {
+			if (!tm.containsKey(a)) tm.put(a, 1);
+			else tm.put(a, tm.get(a) + 1);
+			size++;
+			return true;
+		}
+		public void removeOne(E a) {
+			if (!tm.containsKey(a)) return;
+			if (tm.get(a) == 1) tm.remove(a);
+			else tm.put(a, tm.get(a) - 1);
+			size--;
+		}
+		@Override
+		public int size() {
+			return size;
+		}
+		@Override
+		public boolean isEmpty() {
+			return size() == 0;
+		}
+		@Override
+		public boolean contains(Object o) {
+			return tm.containsKey((E) o);
+		}
+		@Override
+		public Iterator iterator() {
+			return tm.keySet().iterator();
+		}
+		/**DON'T USE THESE**/
+		@Override
+		public Object[] toArray() {
+			return null;
+		}
+		@Override
+		public Object[] toArray(Object[] a) {
+			return null;
+		}
+		@Override
+		public boolean remove(Object o) {
+			return false;
+		}
+		@Override
+		public boolean retainAll(Collection c) {
+			return false;
+		}
+		@Override
+		public boolean removeAll(Collection c) {
+			return false;
+		}
+		/****/
+		@Override
+		public boolean containsAll(Collection c) {
+			boolean works = true;
+			for (Object a : c) works &= tm.containsKey((E) a);
+			return works;
+		}
+		@Override
+		public boolean addAll(Collection c) {
+			for (Object a : c) add((E) a);
+			return true;
+		}
+		@Override
+		public void clear() {
+			tm.clear();
+		}
+	}

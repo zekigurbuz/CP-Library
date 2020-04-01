@@ -1,4 +1,4 @@
-# CP-Library
+# cp-Library
 Collection of useful things to access during contests.
 
 Just copy bits of code that you need into template.cpp or template.java in order to

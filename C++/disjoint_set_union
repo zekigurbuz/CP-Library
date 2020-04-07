@@ -1,33 +1,33 @@
-struct dsu {
-  vi pset;
-  vi size;
-  int numsets;
-  dsu(int n) {
-    numsets = n;
-    pset.resize(n);
-    size.resize(n);
-    forn(i, n) pset[i] = i;
-    forn(i, n) size[i] = 1;
-  }
-  int find_set(int i) {
-    return pset[i] == i ? i : pset[i] = find_set(pset[i]);
-  }
-  void unify(int i, int j) {
-    int a = find_set(i), b = find_set(j);
-    if (a == b) return;
-    numsets--;
-    if (size[a] < size[b]) {
-      pset[a] = b;
-      size[b] += size[a];
-    } else {
-      pset[b] = a;
-      size[a] += size[b];
+struct DSU {
+    vector<int> par;
+    vector<int> sz;
+    int NS;
+    DSU(int n) {
+        NS = n;
+        par.resize(n);
+        sz.resize(n, 1);
+        for (int i = 0; i < n; ++i) par[i] = i;
     }
-  }
-  bool same_set(int i, int j) {
-    return find_set(i) == find_set(j);
-  }
-  int size_set(int i) {
-    return size[find_set(i)];
-  }
+    int parent(int i) {
+        return par[i] == i ? i : (par[i] = parent(par[i]));
+    }
+    void unify(int i, int j) {
+        int a = parent(i), b = parent(j);
+        if (a==b) return;
+        --NS;
+        if (sz[a] < sz[b]) {
+            par[a] = b;
+            sz[b] += sz[a];
+        }
+        else {
+            par[b] = a;
+            sz[a] += sz[b];
+        }
+    }
+    bool same(int i, int j) {
+        return parent(i) == parent(j);
+    }
+    int size(int i) {
+        return sz[parent(i)];
+    }
 };

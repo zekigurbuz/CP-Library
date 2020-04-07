@@ -1,25 +1,26 @@
-struct fenwick {
-  vi bit;
-  int size;
-  fenwick(int n) {
-    size = n;
-    bit.resize(n + 1, 0);
-  }
-  int sum(int a) {
-    int s = 0;
-    while (a >= 1) {
-      s += bit[a];
-      a -= a & -a;
+struct BIT {
+    vector<long long> psum;
+    int SZ;
+    BIT(int n) {
+        ++n;
+        SZ = n;
+        psum.resize(SZ, 0);
     }
-    return s;
-  }
-  int sum(int a, int b) {
-    return sum(b) - (a == 1 ? 0 : sum(a - 1));
-  }
-  void update(int k, int x) {
-    while (k <= size) {
-      bit[k] += x;
-      k += k & -k;
+    long long qry(int ind) {
+        long long sum = 0LL;
+        while (ind) {
+            sum += psum[ind];
+            ind -= ind & -ind;
+        }
+        return sum;
     }
-  }
+    long long qry(int left, int right) {
+        return qry(right) - qry(left == 1 ? 0LL : qry(left - 1));
+    }
+    void upd(int ind, long long val) {
+        while (ind < SZ) {
+            psum[ind] += val;
+            ind += ind & -ind;
+        }
+    }
 };

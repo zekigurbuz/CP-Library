@@ -1,21 +1,18 @@
-int p0w(int n, int p, int m) {
-  if (p == 0) return 1;
-  if (p == 1) return n % m;
-  if (p % 2 == 0) {
-    int t = p0w(n, p / 2, m);
-    return t % m * t % m % m;
-  }
-  int t = p0w(n, p / 2, m);
-  t = t % m * t % m % m;
-  return t % m * n % m % m;
+long long POW(long long n, long long p, long long mod) {
+    long long ret = 1LL;
+    while (p) {
+        if (p%2LL) {ret *= (n % mod); ret %= mod;}
+        n *= (n % mod); n %= mod;
+        p >>= 1LL;
+    }
+    return ret;
 }
-int p0w(int n, int p) {
-  if (p == 0) return 1;
-  if (p == 1) return n;
-  if (p % 2 == 0) {
-    int t = p0w(n, p / 2);
-    return t * t;
-  }
-  int t = p0w(n, p / 2);
-  return t * t * n;
+long long POW(long long n, long long p) {
+    long long ret = 1LL;
+    while (p) {
+        if (p%2LL) ret *= n;
+        n *= n;
+        p >>= 1LL;
+    }
+    return ret;
 }

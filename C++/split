@@ -1,10 +1,10 @@
-vs split(string s) {
-  vs v;
+vector<string> split(string s) {
+  vector<string> v;
   istringstream iss(s);
   do {
     string sub;
     iss >> sub;
-    v.pb(sub);
+    v.push_back(sub);
   } while (iss);
   v.pop_back();
   return v;
